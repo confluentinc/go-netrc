@@ -43,6 +43,11 @@ type Netrc struct {
 	updateLock sync.Mutex
 }
 
+// GetMachines returns the list of Machines stored in the netrc file.
+func (n *Netrc) GetMachines() []*Machine {
+	return n.machines
+}
+
 // FindMachine returns the Machine in n named by name. If a machine named by
 // name exists, it is returned. If no Machine with name name is found and there
 // is a ``default'' machine, the ``default'' machine is returned. Otherwise, nil
@@ -494,6 +499,16 @@ func ParseFile(filename string) (*Netrc, error) {
 // If there is a parsing error, an Error is returned.
 func Parse(r io.Reader) (*Netrc, error) {
 	return parse(r, 1)
+}
+
+// GetMachiens parses the netrc file identified by filename and returns the
+// list of Machines.
+func GetMachines(filename string) (machines []*Machine, err error) {
+	n, err := ParseFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return n.GetMachines(), nil
 }
 
 // FindMachine parses the netrc file identified by filename and returns the

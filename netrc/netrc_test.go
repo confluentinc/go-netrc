@@ -130,6 +130,18 @@ func TestParseFile(t *testing.T) {
 	}
 }
 
+func TestGetMachines(t *testing.T) {
+	machines, err := GetMachines("examples/good.netrc")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for i, m := range machines {
+		if !eqMachine(m, expectedMachines[i]) {
+			t.Errorf("bad machine; expected %v, got %v\n", expectedMachines[1], m)
+		}
+	}
+}
+
 func TestFindMachine(t *testing.T) {
 	m, err := FindMachine("examples/good.netrc", "ray")
 	if err != nil {
@@ -151,6 +163,19 @@ func TestFindMachine(t *testing.T) {
 	}
 	if !m.IsDefault() {
 		t.Errorf("expected m.IsDefault() to be true")
+	}
+}
+
+func TestNetrcGetMachines(t *testing.T) {
+	n, err := ParseFile("examples/good.netrc")
+	if err != nil {
+		t.Fatal(err)
+	}
+	machines := n.GetMachines()
+	for i, m := range machines {
+		if !eqMachine(m, expectedMachines[i]) {
+			t.Errorf("bad machine; expected %v, got %v\n", expectedMachines[1], m)
+		}
 	}
 }
 
